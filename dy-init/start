@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo 'asch server starting....'
+
+rm -f /blockchain.db
+
+rm -f /asch/asch.pid
+
+cd /asch
+
+/root/.nvm/versions/node/v8.9.1/bin/node  ./app.js

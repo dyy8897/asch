@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo 'docker asch server stoping....'
+
+docker stop asch1
+
+docker stop asch2
+
+docker stop asch3
+
+docker stop asch4
+
+docker stop asch5
+
+docker stop asch6
+
+docker stop asch7
+
+docker stop asch8
+
+docker stop asch9

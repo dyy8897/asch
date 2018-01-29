@@ -150,7 +150,7 @@ function main() {
   });
 
   var options = {
-    dbFile: program.blockchain || path.join(baseDir, 'blockchain.db'),
+    dbFile: program.blockchain || path.join('../', 'blockchain.db'),
     appConfig: appConfig,
     genesisblock: genesisblock,
     logger: logger,

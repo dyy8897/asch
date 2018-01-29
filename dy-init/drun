@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo 'docker asch server runing....'
+
+docker run --name asch1 -p 4196:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch2 -p 4296:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch3 -p 4396:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch4 -p 4496:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch5 -p 4596:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch6 -p 4696:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch7 -p 4796:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch8 -p 4896:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+
+docker run --name asch9 -p 4996:4096 -v /home/hitb/git/asch:/asch -d asch /asch/dy-init/start
+

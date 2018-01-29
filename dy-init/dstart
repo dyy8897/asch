@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo 'docker asch server starting....'
+
+docker start asch1
+
+docker start asch2
+
+docker start asch3
+
+docker start asch4
+
+docker start asch5
+
+docker start asch6
+
+docker start asch7
+
+docker start asch8
+
+docker start asch9
