@@ -14,3 +14,63 @@ console.log(trans)
 const trans_id = AschJS.crypto.getId(trans)
 console.log('获取交易ID')
 console.log(trans_id)
+
+Request
+.put('127.0.0.1:4096/api/transactions')
+.send({ secret: secret, amount: 10000,
+    recipientId: "16723473400748954103"
+ }).set('Content-Type', 'application/json')
+.end(function(err,res){
+    console.log('创建交易并广播')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/transactions?limit=2') 
+.end(function(err,res){
+    console.log('获取交易信息')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/transactions/get?id=' + trans_id) 
+.end(function(err,res){
+    console.log('根据交易id查看交易详情')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/transactions/unconfirmed/get?id=' + trans_id) 
+.end(function(err,res){
+    console.log('根据未确认交易id查看详情')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/transactions/unconfirmed?limit=2') 
+.end(function(err,res){
+    console.log('获取[全网所有]未确认的交易详情')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+

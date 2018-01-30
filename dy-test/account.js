@@ -160,3 +160,80 @@ Request
         console.log(res.body)        
     }
 })
+
+Request
+.put('127.0.0.1:4096/api/signatures')
+.send({ secret: secret, secondSecret: "123456"})
+.set('Content-Type', 'application/json')
+.end(function(err,res){
+    console.log('设置二级密码')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+ 
+Request
+.get('127.0.0.1:4096/api/signatures/fee') 
+.end(function(err,res){
+    console.log('获取二级密码设置手续费')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+Request
+.put('127.0.0.1:4096/api/multisignatures')
+.send({ secret: secret, secondSecret: '123456', min: 2, lifetime: 1, 
+    keysgroup: ["+eb48b9ab7c9a34a9b7cdf860265d65b31af774355cabf1b3a387d14a1925dc97","+d5d7aa157f866c47a2a1e09e2746286ed089fd90976b54fbfa930e87d11609cb"]})
+.set('Content-Type', 'application/json')
+.end(function(err,res){
+    console.log('设置普通账户为多重签名账户')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/multisignatures/pending?publicKey=2cef5711e61bb5361c544077aa08aebc4d962a1d656571901c48d716382ad4fd') 
+.end(function(err,res){
+    console.log('根据公钥获取挂起的多重签名交易详情')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+
+Request
+.post('127.0.0.1:4096/api/multisignatures/sign')
+.send({ secret: secret ,secondSecret: secondSecret,
+    transactionId: '17620378998277022323'})    
+.set('Content-Type', 'application/json')
+.end(function(err,res){
+    console.log('非交易发起人对交易进行多重签名')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
+
+
+Request
+.get('127.0.0.1:4096/api/multisignatures/accounts?publicKey=eb48b9ab7c9a34a9b7cdf860265d65b31af774355cabf1b3a387d14a1925dc97') 
+.end(function(err,res){
+    console.log('获取多重签名账户信息')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
