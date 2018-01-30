@@ -12,13 +12,32 @@ console.log('根据公钥生成地址')
 console.log(address)
 
 const secondSecret = '123456'
-const a = AschJS.signature.createSignature(secret, secondSecret)
+const trans = AschJS.signature.createSignature(secret, secondSecret)
 console.log('设置二级密码')
-console.log(a)
+console.log(trans)
 
 const b = AschJS.transaction.createLock(8130, secret, secondSecret)
 console.log('账户锁仓')
 console.log(b)
+
+// /peer相关的api，在请求时都需要设置一个header
+// key为magic，testnet value:594fe0f3, mainnet value:5f5b3cf5
+// key为version，value为''
+
+Request
+.post('127.0.0.1:4096/peer/transactions')
+.send({ transaction: trans})
+.set('Content-Type', 'application/json')
+.set('magic','594fe0f3')
+.set('version', '')
+.end(function(err,res){
+    console.log('设置二级密码的交易')
+    if(err){
+        console.log(err)
+    }else{
+        console.log(res.body)        
+    }
+})
 
 Request
 .post('127.0.0.1:4096/api/accounts/open2/')
@@ -165,6 +184,8 @@ Request
 .put('127.0.0.1:4096/api/signatures')
 .send({ secret: secret, secondSecret: "123456"})
 .set('Content-Type', 'application/json')
+.set('magic', '5f5b3cf5')
+.set('version', '')
 .end(function(err,res){
     console.log('设置二级密码')
     if(err){
@@ -174,7 +195,6 @@ Request
     }
 })
 
- 
 Request
 .get('127.0.0.1:4096/api/signatures/fee') 
 .end(function(err,res){

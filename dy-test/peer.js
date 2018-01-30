@@ -37,7 +37,5 @@ Request
     }
 })
 
-// /peer相关的api，在请求时都需要设置一个header
-// key为magic，testnet value:594fe0f3, mainnet value:5f5b3cf5
-// key为version，value为''
+
 
