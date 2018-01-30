@@ -48,6 +48,7 @@
     以后就是
     dstart
     dstop
+    注意：启动前要把config.json文件中的forging下的secret里的帐号清空！
 
 
 
