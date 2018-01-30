@@ -11,6 +11,8 @@ var TransactionTypes = require('../utils/transaction-types.js');
 var sandboxHelper = require('../utils/sandbox.js');
 var addressHelper = require('../utils/address.js')
 
+const internalIp = require('internal-ip');
+
 require('array.prototype.find'); // Old node fix
 
 // Private fields
@@ -500,7 +502,15 @@ private.loadMyDelegates = function (cb) {
   if (library.config.forging.secret) {
     secrets = util.isArray(library.config.forging.secret) ? library.config.forging.secret : [library.config.forging.secret];
   }
-
+  // 将101个config中设定的矿工分配到10个docker虚拟机上
+  const str = internalIp.v4.sync();
+  const local = str.substr(0,3);
+  const start = parseInt(str.substr(str.length-1,1)) * 10;
+  if(secrets){
+    secrets = secrets.slice(start, start + 10);
+  }
+  if(local === '192'){secrets = null}
+  // ****************************
   async.eachSeries(secrets, function (secret, cb) {
     var keypair = ed.MakeKeypair(crypto.createHash('sha256').update(secret, 'utf8').digest());
 

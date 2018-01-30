@@ -43,11 +43,11 @@
     docker images
 
     cd asch/dy-init/
-    drun
+    ./drun
     docker ps -a
     以后就是
-    dstart
-    dstop
+    ./dstart
+    ./dstop
     注意：启动前要把config.json文件中的forging下的secret里的帐号清空！
 
 
