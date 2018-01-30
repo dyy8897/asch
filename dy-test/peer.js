@@ -37,5 +37,27 @@ Request
     }
 })
 
+Request
+.get('127.0.0.1:4096/peer/list')
+.set('magic', '594fe0f3')
+.set('version', '')
+.end(function(req,res){
+    console.log('查找dapp peer')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/peer/blocks/common')
+.set('magic', '594fe0f3')
+.set('version', '')
+.end(function(req,res){
+    console.log('查找common block')
+    if(res){
+        console.log(res.body)
+    }
+})
+
 
 

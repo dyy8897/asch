@@ -43,3 +43,105 @@ flagType = 2
 const g = AschJS.uia.createFlags(currency, flagType, flag, secret, secondSecret)
 console.log('资产注销')
 console.log(g)
+
+Request
+.get('127.0.0.1:4096/api/uia/issuers?offset=0&limit=1') 
+.end(function(req,res){
+    console.log('获取全网所有发行商')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/issuers/zhenxi') 
+.end(function(req,res){
+    console.log('查询指定发行商的信息')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/issuers/zhenxi/assets?offset=0&limit=2') 
+.end(function(req,res){
+    console.log('查看指定发行商的资产')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/assets?offset=0&limit=2') 
+.end(function(req,res){
+    console.log('获取全网所有资产信息')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/assets/zhenxi.UIA') 
+.end(function(req,res){
+    console.log('获取指定资产信息')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/assets/zhenxi.UIA/acl/1') 
+.end(function(req,res){
+    console.log('获取指定资产的访问控制列表（acl）')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/balances/AKKHPvQb2A119LNicCQWLZQDFxhGVEY57a') 
+.end(function(req,res){
+    console.log('获取指定账户所有uia的余额')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/my/transactions/16358246403719868041?offset=0&limit=2') 
+.end(function(req,res){
+    console.log('获取指定账户所有资产相关操作记录')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/balances/16358246403719868041/IssuerName.CNY') 
+.end(function(req,res){
+    console.log('获取指定账户指定资产的余额')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/transactions/my/16358246403719868041/IssuerName.CNY') 
+.end(function(req,res){
+    console.log('获取指定账户指定资产转账记录')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+Request
+.get('127.0.0.1:4096/api/uia/transactions/absorb.YLB') 
+.end(function(req,res){
+    console.log('获取指定资产转账记录')
+    if(res){
+        console.log(res.body)
+    }
+})
+
+
+
