@@ -1,5 +1,11 @@
+#!/usr/bin/node
+// 这个是开发测试用的，建立虚拟机 docker-10
+// docker run --name asch -p 5196:4096 -v /home/hitb/git/asch:/asch -it asch /bin/bash
+// docker start -i asch
+
 const AschJS = require('asch-js');
 const Request = require('superagent');
+const async = require('async')
 
 const secret = 'someone manual strong movie roof episode eight spatial brown soldier soup motor';
 const secondSecret = '123456'
@@ -8,6 +14,7 @@ let keys = AschJS.crypto.getKeys(secret);
 const publicKey = keys.publicKey
 const privateKey = keys.privateKey
 const address = AschJS.crypto.getAddress(publicKey);
+const address_0 = '14762548536863074694'
 const target_address = "16358246403719868041";  
 const amount = 100*100000000;   //100 XAS
 const message = '备注';
@@ -71,63 +78,115 @@ type = 4;
 options = {fee: fee, type: type, args: '["nicheng"]'}; 
 trans = AschJS.dapp.createInnerTransaction(options, secret);
 
+
+// ================================================
 Request
 .get('127.0.0.1:4096/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-0')
+    console.log('主机-0')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4196/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-1')
+    console.log('docker-1')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4296/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-2')
+    console.log('docker-2')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4396/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-3')
+    console.log('docker-3')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4496/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-4')
+    console.log('docker-4')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4596/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-5')
+    console.log('docker-5')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4696/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-6')
+    console.log('docker-6')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4796/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-7')
+    console.log('docker-7')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4896/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-8')
+    console.log('docker-8')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
 .get('127.0.0.1:4996/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('获取区块链高度-9')
+    console.log('docker-9')
     err ? console.log('err') : console.log(res.body) 
 })
+Request
+.get('127.0.0.1:5196/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('docker-10')
+    err ? console.log('err') : console.log(res.body) 
+})
+
+// =================================================
+Request
+.get('127.0.0.1:5196/api/transactions/unconfirmed?limit=2') 
+.end(function(err,res){
+    console.log('获取[全网所有]未确认的交易详情')
+    err ? console.log('err') : console.log(res.body)
+})
+
+Request
+.get('127.0.0.1:5196/api/transactions?limit=1') 
+.end(function(err,res){
+    console.log('获取交易信息')
+    err ? console.log('err') : console.log(res.body)
+})
+
+Request
+.get('127.0.0.1:5196/api/accounts/getBalance?address=' + target_address) 
+.end(function(err,res){
+    console.log('获取账户余额')
+    err ? console.log('err') : console.log(res.body)
+})
+
+// Request
+// .post('127.0.0.1:5196/peer/transactions')
+// .send({ transaction: trans})
+// .set('Content-Type', 'application/json')
+// .set('magic','594fe0f3')
+// .set('version', '')
+// .end(function(err,res){
+//     console.log('转账交易')
+//     err ? console.log('err') : console.log(res.body)
+// })
+
+// Request
+// .put('127.0.0.1:5196/api/transactions')
+// .send({ secret: secret, amount: 10000,
+//     recipientId: target_address
+//  }).set('Content-Type', 'application/json')
+// .end(function(err,res){
+//     console.log('创建交易并广播')
+//     err ? console.log('err') : console.log(res.body)
+// })
+

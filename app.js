@@ -163,8 +163,10 @@ function main() {
 
   global.featureSwitch = {}
   global.state = {}
-  // 前面都是各种系统设置，这里调用src/init.js初始化。这里定义的function是作为async.auto()的最后执行方法。
-  // 这里的scope就是async.auto({},done)里的那个{}对象。
+  // 前面都是各种系统设置，这里调用src/init.js初始化。
+  // 这里的options就是上面的各种系统设置。
+  // 这里的function是作为async.auto({},done)的那个done函数，也就是最后执行方法。
+  // 这里的function里的scope就是async.auto({},done)里的那个{}对象。
   init(options, function (err, scope) {
     if (err) {
       scope.logger.fatal(err);
