@@ -71,3 +71,63 @@ type = 4;
 options = {fee: fee, type: type, args: '["nicheng"]'}; 
 trans = AschJS.dapp.createInnerTransaction(options, secret);
 
+Request
+.get('127.0.0.1:4096/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-0')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4196/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-1')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4296/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-2')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4396/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-3')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4496/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-4')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4596/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-5')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4696/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-6')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4796/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-7')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4896/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-8')
+    err ? console.log(err) : console.log(res.body) 
+})
+Request
+.get('127.0.0.1:4996/api/blocks/getheight') 
+.end(function(err,res){
+    console.log('获取区块链高度-9')
+    err ? console.log(err) : console.log(res.body) 
+})

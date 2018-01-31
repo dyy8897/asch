@@ -291,14 +291,17 @@ Peer.prototype.remove = function (pip, port, cb) {
     return peer.ip == ip.fromLong(pip) && peer.port == port;
   });
   if (isFrozenList !== undefined) return cb && cb("Peer in white list");
-  library.dbLite.query("DELETE FROM peers WHERE ip = $ip and port = $port;", {
-    ip: pip,
-    port: port
-  }, function (err) {
-    err && library.logger.error('Peer#delete', err);
-
-    cb && cb(err)
-  });
+  // pip传入undefined，导致下面的sql执行报错。
+  if(pip){
+    library.dbLite.query("DELETE FROM peers WHERE ip = $ip and port = $port;", {
+      ip: pip,
+      port: port
+    }, function (err) {
+      err && library.logger.error('Peer#delete', err);
+  
+      cb && cb(err)
+    });
+  }
 }
 
 Peer.prototype.addDapp = function (config, cb) {
