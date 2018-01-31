@@ -38,6 +38,8 @@
         someone manual strong movie roof episode eight spatial brown soldier soup motor
 
 ## 使用docker建立本机的联盟链开发环境
+    注意：config.json文件中的forging下的secret里的帐号被分配到9个虚拟机上！
+
     cd dy-docker/
     docker build -t asch  .
     docker images
@@ -45,10 +47,15 @@
     cd asch/dy-init/
     ./drun
     docker ps -a
+
     以后就是
     ./dstart
     ./dstop
-    注意：启动前要把config.json文件中的forging下的secret里的帐号清空！
+
+    进入docker容器
+    docker attach asch1
+
+    
 
 
 
