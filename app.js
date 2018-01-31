@@ -107,7 +107,7 @@ function main() {
       appConfig.peers.list = [];
     }
   }
-
+  // 在这里加入项目的种子节点，这里的作用和congfig.json里的是一样的。
   if (appConfig.netVersion === 'mainnet') {
     var seeds = [
       757137132,
@@ -136,7 +136,7 @@ function main() {
     console.log('Failed: proto file not exists!');
     return;
   }
-
+  // 作为后台进程运行的，会生成一个pid文件，用于启动的时候检查。
   if (program.daemon) {
     console.log('Asch server started as daemon ...');
     require('daemon')({cwd: process.cwd()});
@@ -163,7 +163,8 @@ function main() {
 
   global.featureSwitch = {}
   global.state = {}
-
+  // 前面都是各种系统设置，这里调用src/init.js初始化。这里定义的function是作为async.auto()的最后执行方法。
+  // 这里的scope就是async.auto({},done)里的那个{}对象。
   init(options, function (err, scope) {
     if (err) {
       scope.logger.fatal(err);

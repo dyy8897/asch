@@ -46,7 +46,7 @@ function getPublicIp() {
   }
   return publicIp;
 }
-
+// 这里的done就是app.js中，调用init()传进来的那个function，作为async.auto()的最后执行方法。
 module.exports = function(options, done) {
   var modules = [];
   var dbFile = options.dbFile;
@@ -56,7 +56,7 @@ module.exports = function(options, done) {
   if (!appConfig.publicIp) {
     appConfig.publicIp = getPublicIp();
   }
-  
+  // 使用强大的async.auto()，自动处理各种初始化方法之间的依赖关系。
   async.auto({
     config: function (cb) {
       cb(null, appConfig);
@@ -212,7 +212,7 @@ module.exports = function(options, done) {
       });
       cb(null, sequence);
     }],
-
+    // 账本记录集，所有交易记录都在这里记录
     balancesSequence: ["logger", function (cb, scope) {
       var sequence = new Sequence({
         name: "balance",
@@ -222,13 +222,13 @@ module.exports = function(options, done) {
       });
       cb(null, sequence);
     }],
-
+    // web服务
     connect: ['config', 'genesisblock', 'logger', 'network', function (cb, scope) {
       var bodyParser = require('body-parser');
       var methodOverride = require('method-override');
       var requestSanitizer = require('./utils/request-sanitizer');
       var queryParser = require('./utils/express-query-int');
-
+      // 使用ejs模板
       scope.network.app.engine('html', require('ejs').renderFile);
       scope.network.app.use(require('express-domain-middleware'));
       scope.network.app.set('view engine', 'ejs');
@@ -408,7 +408,7 @@ module.exports = function(options, done) {
         }]
       }, cb);
     }],
-
+    // 使用domain启动各个模块，捕捉异步回调中出现的异常。
     modules: ['network', 'connect', 'config', 'logger', 'bus', 'sequence', 'dbSequence', 'balancesSequence', 'dbLite', 'base', 'oneoff', 'balanceCache', 'model', function (cb, scope) {
       global.library = scope
       var tasks = {};

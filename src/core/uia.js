@@ -17,7 +17,7 @@ var amountHelper = require('../utils/amount.js')
 
 // Private fields
 var modules, library, self, private = {}, shared = {}
-
+// 用户发行资产（UIA），用于跨链交易，也就是在asch链上做其他币的交易。
 // Constructor
 function UIA(cb, scope) {
   library = scope
