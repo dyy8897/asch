@@ -501,16 +501,17 @@ private.loadMyDelegates = function (cb) {
   var secrets = null;
   if (library.config.forging.secret) {
     secrets = util.isArray(library.config.forging.secret) ? library.config.forging.secret : [library.config.forging.secret];
+    // 9个docker虚拟机上各分配一个矿工（必须6个节点投票），主机上分配99个矿工（本地投票）
+    const str = internalIp.v4.sync();
+    const local = str.substr(0,3);
+    const i = parseInt(str.substr(str.length-1,1));
+    if(local === '192'){
+      secrets = secrets.slice(10, 101);
+    }else{
+      secrets = [secrets[i]];
+    }
+    // ****************************
   }
-  // 将101个config中设定的矿工分配到10个docker虚拟机上
-  const str = internalIp.v4.sync();
-  const local = str.substr(0,3);
-  const start = parseInt(str.substr(str.length-1,1)) * 10;
-  if(secrets){
-    secrets = secrets.slice(start, start + 10);
-  }
-  if(local === '192'){secrets = null}
-  // ****************************
   async.eachSeries(secrets, function (secret, cb) {
     var keypair = ed.MakeKeypair(crypto.createHash('sha256').update(secret, 'utf8').digest());
 

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo 'docker asch server removing....'
+
+docker rm asch1
+
+docker rm asch2
+
+docker rm asch3
+
+docker rm asch4
+
+docker rm asch5
+
+docker rm asch6
+
+docker rm asch7
+
+docker rm asch8
+
+docker rm asch9
