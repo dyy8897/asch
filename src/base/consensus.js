@@ -13,7 +13,7 @@ function Consensus(scope, cb) {
   this.votesKeySet = {};
   cb && setImmediate(cb, null, this);
 }
-
+// 本地的矿工投票
 Consensus.prototype.createVotes = function (keypairs, block) {
   var hash = this.getVoteHash(block.height, block.id);
   var votes = {
@@ -55,11 +55,11 @@ Consensus.prototype.getVoteHash = function (height, id) {
   bytes.flip();
   return crypto.createHash('sha256').update(bytes.toBuffer()).digest();
 }
-
+// 本地大于2/3矿工数量
 Consensus.prototype.hasEnoughVotes = function (votes) {
   return votes && votes.signatures && votes.signatures.length > slots.delegates * 2 / 3;
 }
-
+// 远程大于5个节点
 Consensus.prototype.hasEnoughVotesRemote = function (votes) {
   return votes && votes.signatures && votes.signatures.length >= 6;
 }
@@ -110,7 +110,7 @@ Consensus.prototype.addPendingVotes = function (votes) {
   }
   return this.pendingVotes;
 }
-
+// 远程矿工投票
 Consensus.prototype.createPropose = function (keypair, block, address) {
   assert(keypair.publicKey.toString("hex") == block.generatorPublicKey);
   var propose = {

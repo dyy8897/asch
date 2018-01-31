@@ -9,6 +9,8 @@ var ip = require('ip');
 var Sequence = require('./utils/sequence.js');
 var slots = require('./utils/slots.js');
 
+const internalIp = require('internal-ip');
+
 var moduleNames = [
   'server',
   'accounts',
@@ -43,6 +45,12 @@ function getPublicIp() {
       });
     });
   } catch (e) {
+  }
+  // 如果没有公网IP，就用docker虚拟机IP代替。
+  if(!publicIp){
+    publicIp = internalIp.v4.sync();
+    const local = publicIp.substr(0,3);
+    if(local === '192'){publicIp = '172.17.0.1'}
   }
   return publicIp;
 }
