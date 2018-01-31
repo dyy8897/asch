@@ -1212,7 +1212,7 @@ Blocks.prototype.deleteBlocksBefore = function (block, cb) {
     }
   );
 }
-
+// 生成区块
 Blocks.prototype.generateBlock = function (keypair, timestamp, cb) {
   var transactions = modules.transactions.getUnconfirmedTransactionList(false, constants.maxTxsPerBlock);
   var ready = [];
