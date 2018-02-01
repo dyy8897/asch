@@ -1,6 +1,6 @@
 #!/usr/bin/node
 // 这个是开发测试用的，建立虚拟机 docker-10
-// docker run --name asch -p 5196:4096 -v /home/hitb/git/asch:/asch -it asch /bin/bash
+// docker run --name asch -p 5096:4096 -v /home/hitb/git/asch:/asch -it asch /bin/bash
 // docker start -i asch
 
 const AschJS = require('asch-js');
@@ -141,7 +141,7 @@ Request
     err ? console.log('err') : console.log(res.body) 
 })
 Request
-.get('127.0.0.1:5196/api/blocks/getheight') 
+.get('127.0.0.1:5096/api/blocks/getheight') 
 .end(function(err,res){
     console.log('docker-10')
     err ? console.log('err') : console.log(res.body) 
@@ -149,28 +149,28 @@ Request
 
 // =================================================
 Request
-.get('127.0.0.1:5196/api/transactions/unconfirmed?limit=2') 
+.get('127.0.0.1:5096/api/transactions/unconfirmed?limit=2') 
 .end(function(err,res){
     console.log('获取[全网所有]未确认的交易详情')
     err ? console.log('err') : console.log(res.body)
 })
 
-Request
-.get('127.0.0.1:5196/api/transactions?limit=1') 
-.end(function(err,res){
-    console.log('获取交易信息')
-    err ? console.log('err') : console.log(res.body)
-})
-
-Request
-.get('127.0.0.1:5196/api/accounts/getBalance?address=' + target_address) 
-.end(function(err,res){
-    console.log('获取账户余额')
-    err ? console.log('err') : console.log(res.body)
-})
+// Request
+// .get('127.0.0.1:5096/api/transactions?limit=1') 
+// .end(function(err,res){
+//     console.log('获取交易信息')
+//     err ? console.log('err') : console.log(res.body)
+// })
 
 // Request
-// .post('127.0.0.1:5196/peer/transactions')
+// .get('127.0.0.1:5096/api/accounts/getBalance?address=' + target_address) 
+// .end(function(err,res){
+//     console.log('获取账户余额')
+//     err ? console.log('err') : console.log(res.body)
+// })
+
+// Request
+// .post('127.0.0.1:5096/peer/transactions')
 // .send({ transaction: trans})
 // .set('Content-Type', 'application/json')
 // .set('magic','594fe0f3')
@@ -181,7 +181,7 @@ Request
 // })
 
 // Request
-// .put('127.0.0.1:5196/api/transactions')
+// .put('127.0.0.1:5096/api/transactions')
 // .send({ secret: secret, amount: 10000,
 //     recipientId: target_address
 //  }).set('Content-Type', 'application/json')

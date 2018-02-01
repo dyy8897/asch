@@ -866,7 +866,7 @@ Blocks.prototype.verifyBlockVotes = function (block, votes, cb) {
     cb();
   });
 }
-
+// 生成区块
 Blocks.prototype.applyBlock = function (block, votes, broadcast, saveBlock, callback) {
   private.isActive = true;
   var applyedTrsIdSet = new Set
