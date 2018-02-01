@@ -1296,6 +1296,10 @@ Blocks.prototype.generateBlock = function (keypair, timestamp, cb) {
           if (!library.config.publicIp) {
             return next("No public ip");
           }
+          // 没有交易的block不发起投票，目的是不生成没有交易的block
+          if(block.numberOfTransactions === 0){
+            return next("No transation");
+          }
           var serverAddr = library.config.publicIp + ':' + library.config.port;
           var propose;
           try {

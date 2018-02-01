@@ -445,7 +445,7 @@ private.getBlockSlotData = function (slot, height, cb) {
     cb(null, null);
   });
 }
-
+// 矿工定时循环挖矿
 private.loop = function (cb) {
   if (!private.forgingEanbled) {
     library.logger.trace('Loop:', 'forging disabled');
