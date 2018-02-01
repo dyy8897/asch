@@ -1,8 +1,10 @@
 #!/usr/bin/node
-// 这个是开发测试用的，建立虚拟机 docker-10
-// docker run --name asch -p 5096:4096 -v /home/hitb/git/asch:/asch -it asch /bin/bash
-// docker start -i asch
-
+// 直接在主机下 node app.js 启动的是单机版,相当于私有链
+// 这个是用于模拟联盟链的开发测试用，建立虚拟机 docker-0
+// docker run --name asch -p 4096:4096 -v /home/hitb/git/asch:/asch -it asch /bin/bash
+// 再次启动执行 docker start -i asch
+// 可以在主机下执行单元测试 npm run test
+// 这里的test是用于开发过程中的代码调试的
 const AschJS = require('asch-js');
 const Request = require('superagent');
 const async = require('async')
@@ -83,7 +85,7 @@ trans = AschJS.dapp.createInnerTransaction(options, secret);
 Request
 .get('127.0.0.1:4096/api/blocks/getheight') 
 .end(function(err,res){
-    console.log('主机-0')
+    console.log('docker-0')
     err ? console.log('err') : console.log(res.body) 
 })
 Request
@@ -140,37 +142,31 @@ Request
     console.log('docker-9')
     err ? console.log('err') : console.log(res.body) 
 })
-Request
-.get('127.0.0.1:5096/api/blocks/getheight') 
-.end(function(err,res){
-    console.log('docker-10')
-    err ? console.log('err') : console.log(res.body) 
-})
 
 // =================================================
 Request
-.get('127.0.0.1:5096/api/transactions/unconfirmed?limit=2') 
+.get('127.0.0.1:4096/api/transactions/unconfirmed?limit=2') 
 .end(function(err,res){
     console.log('获取[全网所有]未确认的交易详情')
     err ? console.log('err') : console.log(res.body)
 })
 
 // Request
-// .get('127.0.0.1:5096/api/transactions?limit=1') 
+// .get('127.0.0.1:4096/api/transactions?limit=1') 
 // .end(function(err,res){
 //     console.log('获取交易信息')
 //     err ? console.log('err') : console.log(res.body)
 // })
 
 // Request
-// .get('127.0.0.1:5096/api/accounts/getBalance?address=' + target_address) 
+// .get('127.0.0.1:4096/api/accounts/getBalance?address=' + target_address) 
 // .end(function(err,res){
 //     console.log('获取账户余额')
 //     err ? console.log('err') : console.log(res.body)
 // })
 
 // Request
-// .post('127.0.0.1:5096/peer/transactions')
+// .post('127.0.0.1:4096/peer/transactions')
 // .send({ transaction: trans})
 // .set('Content-Type', 'application/json')
 // .set('magic','594fe0f3')
@@ -181,7 +177,7 @@ Request
 // })
 
 // Request
-// .put('127.0.0.1:5096/api/transactions')
+// .put('127.0.0.1:4096/api/transactions')
 // .send({ secret: secret, amount: 10000,
 //     recipientId: target_address
 //  }).set('Content-Type', 'application/json')
