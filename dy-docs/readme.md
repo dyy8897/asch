@@ -30,9 +30,10 @@
     gulp build-main
     或者
     gulp build-test
-
+    
     cd asch/
     node app.js
+    注意:这样启动的是test版本,所以上面要用gulp build-test生成test版本的客户端,否则客户端的转账等post的功能不可用.
     浏览器打开 http://127.0.0.1:4096/
     使用创世帐号登录（12个英文单词组成的口令字符串）
         someone manual strong movie roof episode eight spatial brown soldier soup motor
@@ -55,7 +56,28 @@
     进入docker容器
     docker attach asch1
 
-    
+    使用代理人(矿工)登录
+      aware rabbit syrup expose visa list pause shuffle lunch audit exchange wrong
+
+      early sugar cannon mansion expose tunnel piece manual destroy exhaust helmet rather
+
+      alter art sick gallery equal voice bunker sauce claw tourist twice essay
+
+      pigeon chalk mother east harbor enlist busy parrot dune humble faith thought
+
+      raise cloud royal wonder cradle job gate wife depth device bitter hope
+
+      quarter predict civil guide attend chunk negative wheel rapid arm unfair rookie
+
+      ceiling hair stick remember school agree reunion typical before ridge shy laugh
+
+      steak turn suffer banner hope pretty angle exclude leg betray matter sweet
+
+      regular eagle edge voice armor job purity alter genre soap embark chapter
+      
+      rubber paper menu pony able gather upon leaf pill pipe peace mad
+
+## 侧链应用Dapp的开发
 
 
 
