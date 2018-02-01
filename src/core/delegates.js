@@ -501,7 +501,8 @@ private.loadMyDelegates = function (cb) {
   var secrets = null;
   if (library.config.forging.secret) {
     secrets = util.isArray(library.config.forging.secret) ? library.config.forging.secret : [library.config.forging.secret];
-    // 9个docker虚拟机上各分配一个矿工（必须6个节点投票），主机上分配99个矿工（本地投票）
+    // 10个docker虚拟机上各分配一个矿工（必须6个节点投票），主机上分配99个矿工（本地投票）
+    // 投票数量大于节点数量的2/3就有效。
     const str = internalIp.v4.sync();
     const local = str.substr(0,3);
     const i = parseInt(str.substr(str.length-1,1));

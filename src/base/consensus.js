@@ -5,6 +5,7 @@ var ed = require('../utils/ed.js');
 var ip = require('ip');
 var bignum = require('bignumber');
 var slots = require('../utils/slots.js');
+const peer = require('../core/peer.js')
 
 function Consensus(scope, cb) {
   this.scope = scope;
@@ -55,11 +56,13 @@ Consensus.prototype.getVoteHash = function (height, id) {
   bytes.flip();
   return crypto.createHash('sha256').update(bytes.toBuffer()).digest();
 }
-// 本地大于2/3矿工数量
+// 本地大于2/3矿工数量,这里改为大于2/3节点数量
+// todo:这里应该获取当前连接的peer数量，现在先写7
 Consensus.prototype.hasEnoughVotes = function (votes) {
-  return votes && votes.signatures && votes.signatures.length > slots.delegates * 2 / 3;
+  // return votes && votes.signatures && votes.signatures.length > slots.delegates * 2 / 3;
+  return votes && votes.signatures && votes.signatures.length > 7;
 }
-// 远程大于5个节点
+// 远程大于5个节点，这句话好像没有作用。
 Consensus.prototype.hasEnoughVotesRemote = function (votes) {
   return votes && votes.signatures && votes.signatures.length >= 6;
 }
