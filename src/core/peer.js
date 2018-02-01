@@ -291,7 +291,7 @@ Peer.prototype.remove = function (pip, port, cb) {
     return peer.ip == ip.fromLong(pip) && peer.port == port;
   });
   if (isFrozenList !== undefined) return cb && cb("Peer in white list");
-  // pip传入undefined，导致下面的sql执行报错。
+  // pip传入undefined，导致下面的sql执行报错，添加if(pip)的判断。
   if(pip){
     library.dbLite.query("DELETE FROM peers WHERE ip = $ip and port = $port;", {
       ip: pip,
