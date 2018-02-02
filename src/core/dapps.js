@@ -840,7 +840,7 @@ function DApp() {
         category: {
           type: "integer",
           minimum: 0,
-          maximum: 8
+          maximum: 9
         },
         name: {
           type: "string",
