@@ -3,172 +3,203 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
-    <title>Asch DApp Example 1 - hello world</title>
+    <script src="jquery-1.9.1.min.js"></script>
+    <script src="vue.min.js"></script>
+    <title>common - hello world</title>
 </head>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        var DAPP_ID = window.location.pathname.split('/')[2];
-        var BASE_URL = '/api/dapps/' + DAPP_ID;
-        var COUNT_PER_PAGE = 20;
-        var State = {
-            isLogin: false,
-            timer: null
-        };
-        var UserInfo = {
-            secret: '',
-        };
-        function updateBalanceView(balances) {
-            var $table = $('#balanceTable');
-            $table.find('tr:not(:first)').remove();
-            for (var i in balances) {
-                var balanceInfo = balances[i]
-                var balance = Number(balanceInfo.balance) / 100000000
-                var currency = balanceInfo.currency
-                var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
-                $table.append(tr);
-            }
-        }
-        function loadContracts() {
-            $.ajax({
-                type: 'GET',
-                url: BASE_URL + '/contracts',
-                dataType: 'json',
-                success: function (ret) {
-                    console.log(ret)
-                    var $contractOptions = $('#contractOptions')
-                    $contractOptions.empty()
-                    for (var i in ret.contracts) {
-                        var c = ret.contracts[i]
-                        $contractOptions.append('<option value="' + c.type + '">' + c.type + ': ' + c.name + '</option>')
-                    }
-                }
-            })
-        }
-        function onLogin(account) {
-            State.isLogin = true;
-            $('#loginBtn').val('Logout');
-            $('#secretInput').hide();
-            $('#mainPanel').show();
-            updateBalanceView(account.balances);
-            loadContracts()
-        }
-        function login(secret) {
-            $.ajax({
-                type: 'POST',
-                url: BASE_URL + '/login',
-                data: {
-                    secret: secret
-                },
-                dataType: 'json',
-                success: function(ret) {
-                    console.log(ret);
-                    if (!ret.success) {
-                        alert(ret.error);
-                        return;
-                    }
-                    UserInfo.secret = secret;
-                    UserInfo.publicKey = ret.account.publicKey;
-                    UserInfo.address = ret.account.address
-                    onLogin(ret.account);
-                }
-            });
-        }
-        function getBalances(address) {
-            $.ajax({
-                type: 'GET',
-                url: BASE_URL + '/balances/' + address,
-                dataType: 'json',
-                success: function(ret) {
-                    console.log(ret);
-                    if (!ret.success) {
-                        alert(ret.error);
-                        return;
-                    }
-                    updateBalanceView(ret.balances)
-                }
-            });
-        }
-        function logout() {
-            $('#loginBtn').val('login');
-            $('#secretInput').show();
-            $('#mainPanel').hide();
-            State.isLogin = false;
-            if (State.timer) {
-                clearInterval(State.timer);
-                State.timer = null;
-            }
-        }
+$(document).ready(function() {
+    // 将jquery的ajax加入到Vue对象中,vue对象里的this.$ajax就相当于是jquery的$.ajax
+    Vue.prototype.$ajax = $.ajax;
+    var DAPP_ID = window.location.pathname.split('/')[2];
+    var BASE_URL = '/api/dapps/' + DAPP_ID;
+    var COUNT_PER_PAGE = 20;
+    var State = {
+        isLogin: false,
+        timer: null
+    };
+    var UserInfo = {
+        secret: '',
+    };
 
-        State.timer = setInterval(function () {
-            if (UserInfo.publicKey) {
-                getBalances(UserInfo.address);
+    new Vue({
+        el: '#title',
+        data: {
+            m1: 'Hello Vue common!',
+            m2: '页面加载于 ' + new Date().toLocaleString()            
+        }
+    })
+
+    new Vue({
+        el: '#loginBtn',
+        data: {
+            m1: '登录common系统',
+        },
+        methods: {
+            login: function (event) {
+                const secret = $('#secretInput').val();
+                this.$ajax({
+                    type: 'POST',
+                    url: BASE_URL + '/login',
+                    data: {
+                        secret: secret
+                    },
+                    dataType: 'json',
+                    success: function(ret) {
+                        console.log(ret);
+                        if (!ret.success) {
+                            alert(ret.error);
+                            return;
+                        }
+                        UserInfo.secret = secret;
+                        UserInfo.publicKey = ret.account.publicKey;
+                        UserInfo.address = ret.account.address
+                        onLogin(ret.account);
+                    }
+                });
             }
-        }, 10 * 1000);
-        $('#loginBtn').click(function () {
-            if (State.isLogin) {
-                logout();
-            } else {
-                login($('#secretInput').val());
+        }
+    })
+
+    new Vue({
+        el: '#logoutBtn',
+        data: {
+            m1: 'logout',
+        },
+        methods: {
+            logout: function (event) {
+                $('#loginBtn').val('login');
+                $('#secretInput').show();
+                $('#mainPanel').hide();
+                State.isLogin = false;
+                if (State.timer) {
+                    clearInterval(State.timer);
+                    State.timer = null;
+                }
+            }
+        }
+    })
+
+
+    function updateBalanceView(balances) {
+        var $table = $('#balanceTable');
+        $table.find('tr:not(:first)').remove();
+        for (var i in balances) {
+            var balanceInfo = balances[i]
+            var balance = Number(balanceInfo.balance) / 100000000
+            var currency = balanceInfo.currency
+            var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
+            $table.append(tr);
+        }
+    }
+    
+    function loadContracts() {
+        $.ajax({
+            type: 'GET',
+            url: BASE_URL + '/contracts',
+            dataType: 'json',
+            success: function (ret) {
+                console.log(ret)
+                var $contractOptions = $('#contractOptions')
+                $contractOptions.empty()
+                for (var i in ret.contracts) {
+                    var c = ret.contracts[i]
+                    $contractOptions.append('<option value="' + c.type + '">' + c.type + ': ' + c.name + '</option>')
+                }
+            }
+        })
+    }
+
+    function onLogin(account) {
+        State.isLogin = true;
+        $('#loginBtn').val('Logout');
+        $('#secretInput').hide();
+        $('#mainPanel').show();
+        updateBalanceView(account.balances);
+        loadContracts()
+    }
+
+    function getBalances(address) {
+        $.ajax({
+            type: 'GET',
+            url: BASE_URL + '/balances/' + address,
+            dataType: 'json',
+            success: function(ret) {
+                console.log(ret);
+                if (!ret.success) {
+                    alert(ret.error);
+                    return;
+                }
+                updateBalanceView(ret.balances)
             }
         });
-        $('#invokeBtn').click(function () {
-            var args = $('#contractArgs').val().split('\n')
-            var fee = '10000000'
-            var data = {
-                secret: UserInfo.secret,
-                fee: fee,
-                type: Number($('#contractOptions').val()),
-                args: JSON.stringify(args)
-            }
-            console.log('invoke', data)
-            $.ajax({
-                type: 'PUT',
-                url: BASE_URL + '/transactions/unsigned',
-                data: data,
-                dataType: 'json',
-                success: function(ret) {
-                    console.log(ret);
-                    if (!ret.success) {
-                        alert('Error: ' + ret.error);
-                        return;
-                    }
-                    alert("Success! " + ret.transactionId);
-                }
-            });
-        })
-        $('#accessBtn').click(function () {
-            var params = $('#accessParams').val()
-            var jsonParams = null
-            try {
-                if (params) {
-                    var jsonParams = JSON.parse(params)
-                }
-            } catch (e) {
-                alert('Invalid params')
-                return
-            }
+    }
 
-            $.ajax({
-                type: 'GET',
-                url: BASE_URL + $('#accessUrl').val(),
-                data: jsonParams,
-                dataType: 'json',
-                success: function (ret) {
-                    console.log(ret)
-                    $('#accessResponse').val(JSON.stringify(ret, null, 4));
+    State.timer = setInterval(function () {
+        if (UserInfo.publicKey) {
+            getBalances(UserInfo.address);
+        }
+    }, 10 * 1000);
+
+    $('#invokeBtn').click(function () {
+        var args = $('#contractArgs').val().split('\n')
+        var fee = '10000000'
+        var data = {
+            secret: UserInfo.secret,
+            fee: fee,
+            type: Number($('#contractOptions').val()),
+            args: JSON.stringify(args)
+        }
+        console.log('invoke', data)
+        $.ajax({
+            type: 'PUT',
+            url: BASE_URL + '/transactions/unsigned',
+            data: data,
+            dataType: 'json',
+            success: function(ret) {
+                console.log(ret);
+                if (!ret.success) {
+                    alert('Error: ' + ret.error);
+                    return;
                 }
-            })
+                alert("Success! " + ret.transactionId);
+            }
+        });
+    })
+
+    $('#accessBtn').click(function () {
+        var params = $('#accessParams').val()
+        var jsonParams = null
+        try {
+            if (params) {
+                var jsonParams = JSON.parse(params)
+            }
+        } catch (e) {
+            alert('Invalid params')
+            return
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: BASE_URL + $('#accessUrl').val(),
+            data: jsonParams,
+            dataType: 'json',
+            success: function (ret) {
+                console.log(ret)
+                $('#accessResponse').val(JSON.stringify(ret, null, 4));
+            }
         })
-    });
+    })
+});
 </script>
 
 <body>
-    <h1>Asch DApp Example 1 - hello world</h1>
+    <h1 id="title" v-bind:title="m2">{{m1}}</h1>
     <div>
         <input type="password" id="secretInput" placeholder="Please input master secret">
-        <input type="button" value="Login" id="loginBtn">
+        <input type="button" value="登录系统" id="loginBtn" v-on:click="login">
+        <input type="button" value="退出系统" id="logoutBtn" v-on:click="logout">
     </div>
     <div id="mainPanel" style="display: none;">
         <hr/>

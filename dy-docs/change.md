@@ -1,3 +1,7 @@
+#### 2018-02-02
+##### 修改dapp的category的maximum限制,支持9-游戏的注册应用
+##### 新建dy-dapps/目录, 使用asch-cli工具创建了9种分类的dapp的框架代码, 但其实都是一样的.
+##### 在dy-dapps/common/项目下, 先在public/目录下的前端开发中引入vue, 先混合使用jquery和vue, 将jquery的ajax加入到Vue对象中,vue对象里的this.$ajax就相当于是jquery的$.ajax
 
 #### 2018-02-01
 ##### 去除对于生成区块的时间间隔的限制
