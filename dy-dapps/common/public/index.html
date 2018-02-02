@@ -15,31 +15,39 @@ $(document).ready(function() {
     Vue.prototype.$ajax = $.ajax;
     const DAPP_ID = window.location.pathname.split('/')[2];
     const BASE_URL = '/api/dapps/' + DAPP_ID;
-
-
-    var COUNT_PER_PAGE = 20;
-    var State = {
-        isLogin: false,
-        timer: null
-    };
-    var UserInfo = {
-        secret: '',
-    };
-
-    new Vue({
-        el: '#title',
+    // 整个页面就是一个Vue对象,将所有属性都放到data里,将所有function都放到methods里
+    const common = new Vue({
+        el: '#common',
         data: {
-            m1: 'Hello Vue common!',
-            m2: '页面加载于 ' + new Date().toLocaleString()            
-        }
-    })
-
-    new Vue({
-        el: '#loginBtn',
-        data: {
-            m1: '登录common系统',
+            COUNT_PER_PAGE: 20,
+            isLogin: false,
+            isLogout: true,
+            title: 'Hello Vue common!',
+            m2: '页面加载于 ' + new Date().toLocaleString(),
+            timer: null,
+            UserInfo: {
+                secret: ''
+            }
+            // timer: setInterval( ()=> {
+            //     console.log(this)
+            //     if (this.UserInfo.publicKey) {
+            //         getBalances(this.UserInfo.address);
+            //     }
+            // }, 10 * 1000),
+            
         },
         methods: {
+            reverseMessage: function () {
+                this.message = this.message.split('').reverse().join('')
+            },
+            logout: function(e){
+                this.isLogin = false;
+                this.isLogout = true;
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+            },
             login: function (event) {
                 const secret = $('#secretInput').val();
                 this.$ajax({
@@ -49,162 +57,129 @@ $(document).ready(function() {
                         secret: secret
                     },
                     dataType: 'json',
-                    success: function(ret) {
-                        console.log(ret);
-                        if (!ret.success) {
-                            alert(ret.error);
+                    success: (res)=> {
+                        console.log(res)
+                        if (!res.success) {
+                            alert(res.error);
                             return;
                         }
-                        UserInfo.secret = secret;
-                        UserInfo.publicKey = ret.account.publicKey;
-                        UserInfo.address = ret.account.address
-                        onLogin(ret.account);
+                        this.isLogin = true
+                        this.isLogout = false
+                        this.UserInfo.secret = secret;
+                        this.UserInfo.publicKey = res.account.publicKey;
+                        this.UserInfo.address = res.account.address
+                        this.updateBalanceView(res.account.balances);
+                        this.loadContracts()
+
+                    }
+                });
+            },
+            invoke: function (event) {
+                var args = $('#contractArgs').val().split('\n')
+                var fee = '10000000'
+                var data = {
+                    secret: this.UserInfo.secret,
+                    fee: fee,
+                    type: Number($('#contractOptions').val()),
+                    args: JSON.stringify(args)
+                }
+                console.log('invoke', data)
+                $.ajax({
+                    type: 'PUT',
+                    url: BASE_URL + '/transactions/unsigned',
+                    data: data,
+                    dataType: 'json',
+                    success: (res)=> {
+                        console.log(res);
+                        if (!res.success) {
+                            alert('Error: ' + res.error);
+                            return;
+                        }
+                        alert("Success! " + res.transactionId);
+                    }
+                });
+            },
+            access: function (event) {
+                var params = $('#accessParams').val()
+                var jsonParams = null
+                try {
+                    if (params) {
+                        var jsonParams = JSON.parse(params)
+                    }
+                } catch (e) {
+                    alert('Invalid params')
+                    return
+                }
+        
+                $.ajax({
+                    type: 'GET',
+                    url: BASE_URL + $('#accessUrl').val(),
+                    data: jsonParams,
+                    dataType: 'json',
+                    success: (res)=> {
+                        console.log(res)
+                        $('#accessResponse').val(JSON.stringify(res, null, 4));
+                    }
+                })
+            },
+            updateBalanceView: function(balances) {
+                var $table = $('#balanceTable');
+                $table.find('tr:not(:first)').remove();
+                for (var i in balances) {
+                    var balanceInfo = balances[i]
+                    var balance = Number(balanceInfo.balance) / 100000000
+                    var currency = balanceInfo.currency
+                    var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
+                    $table.append(tr);
+                }
+            },
+            loadContracts: function() {
+                $.ajax({
+                    type: 'GET',
+                    url: BASE_URL + '/contracts',
+                    dataType: 'json',
+                    success: (res)=> {
+                        console.log(res)
+                        var $contractOptions = $('#contractOptions')
+                        $contractOptions.empty()
+                        for (var i in res.contracts) {
+                            var c = res.contracts[i]
+                            $contractOptions.append('<option value="' + c.type + '">' + c.type + ': ' + c.name + '</option>')
+                        }
+                    }
+                })
+            },
+            getBalances: function(address) {
+                $.ajax({
+                    type: 'GET',
+                    url: BASE_URL + '/balances/' + address,
+                    dataType: 'json',
+                    success: (res)=> {
+                        console.log(res);
+                        if (!res.success) {
+                            alert(res.error);
+                            return;
+                        }
+                        this.updateBalanceView(res.balances)
                     }
                 });
             }
+
         }
     })
 
-    new Vue({
-        el: '#logoutBtn',
-        data: {
-            m1: 'logout',
-        },
-        methods: {
-            logout: function (event) {
-                $('#loginBtn').val('login');
-                $('#secretInput').show();
-                $('#mainPanel').hide();
-                State.isLogin = false;
-                if (State.timer) {
-                    clearInterval(State.timer);
-                    State.timer = null;
-                }
-            }
-        }
-    })
-
-
-    function updateBalanceView(balances) {
-        var $table = $('#balanceTable');
-        $table.find('tr:not(:first)').remove();
-        for (var i in balances) {
-            var balanceInfo = balances[i]
-            var balance = Number(balanceInfo.balance) / 100000000
-            var currency = balanceInfo.currency
-            var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
-            $table.append(tr);
-        }
-    }
-    
-    function loadContracts() {
-        $.ajax({
-            type: 'GET',
-            url: BASE_URL + '/contracts',
-            dataType: 'json',
-            success: function (ret) {
-                console.log(ret)
-                var $contractOptions = $('#contractOptions')
-                $contractOptions.empty()
-                for (var i in ret.contracts) {
-                    var c = ret.contracts[i]
-                    $contractOptions.append('<option value="' + c.type + '">' + c.type + ': ' + c.name + '</option>')
-                }
-            }
-        })
-    }
-
-    function onLogin(account) {
-        State.isLogin = true;
-        $('#loginBtn').val('Logout');
-        $('#secretInput').hide();
-        $('#mainPanel').show();
-        updateBalanceView(account.balances);
-        loadContracts()
-    }
-
-    function getBalances(address) {
-        $.ajax({
-            type: 'GET',
-            url: BASE_URL + '/balances/' + address,
-            dataType: 'json',
-            success: function(ret) {
-                console.log(ret);
-                if (!ret.success) {
-                    alert(ret.error);
-                    return;
-                }
-                updateBalanceView(ret.balances)
-            }
-        });
-    }
-
-    State.timer = setInterval(function () {
-        if (UserInfo.publicKey) {
-            getBalances(UserInfo.address);
-        }
-    }, 10 * 1000);
-
-    $('#invokeBtn').click(function () {
-        var args = $('#contractArgs').val().split('\n')
-        var fee = '10000000'
-        var data = {
-            secret: UserInfo.secret,
-            fee: fee,
-            type: Number($('#contractOptions').val()),
-            args: JSON.stringify(args)
-        }
-        console.log('invoke', data)
-        $.ajax({
-            type: 'PUT',
-            url: BASE_URL + '/transactions/unsigned',
-            data: data,
-            dataType: 'json',
-            success: function(ret) {
-                console.log(ret);
-                if (!ret.success) {
-                    alert('Error: ' + ret.error);
-                    return;
-                }
-                alert("Success! " + ret.transactionId);
-            }
-        });
-    })
-
-    $('#accessBtn').click(function () {
-        var params = $('#accessParams').val()
-        var jsonParams = null
-        try {
-            if (params) {
-                var jsonParams = JSON.parse(params)
-            }
-        } catch (e) {
-            alert('Invalid params')
-            return
-        }
-
-        $.ajax({
-            type: 'GET',
-            url: BASE_URL + $('#accessUrl').val(),
-            data: jsonParams,
-            dataType: 'json',
-            success: function (ret) {
-                console.log(ret)
-                $('#accessResponse').val(JSON.stringify(ret, null, 4));
-            }
-        })
-    })
 });
 </script>
 
 <body>
-    <h1 id="title" v-bind:title="m2">{{m1}}</h1>
-    <div>
-        <input type="password" id="secretInput" placeholder="Please input master secret">
-        <input type="button" value="登录系统" id="loginBtn" v-on:click="login">
-        <input type="button" value="退出系统" id="logoutBtn" v-on:click="logout">
+<div id="common">
+    <h1 id="title" v-bind:title="m2">{{title}}</h1>
+    <div id="login">
+        <input type="password" id="secretInput" placeholder="Please input master secret" v-if="isLogout">
+        <input type="button" value="登录系统" id="loginBtn" v-on:click="login" v-if="isLogout">
+        <input type="button" value="退出系统" id="logoutBtn" v-on:click="logout" v-if="isLogin">
     </div>
-    <div id="mainPanel" style="display: none;">
+    <div id="mainPanel" v-if="isLogin">
         <hr/>
         <h2>Account balances</h2>
         <div>
@@ -219,18 +194,19 @@ $(document).ready(function() {
         <hr/>
         <h2>Contract invoke</h2>
         <div>
-            <select id="contractOptions"></select><input type="button" id="invokeBtn" value="Invoke"><br/>
+            <select id="contractOptions"></select><input type="button" id="invokeBtn" value="Invoke" ><br/>
             <textarea rows="6" cols="60" id="contractArgs" placeholder="Please input the arguments"></textarea><br/>
         </div>
 
         <hr/>
         <h2>Interface access</h2>
         <div>
-            <input type="text" id="accessUrl" placeholder="Please input url"><input type="button" id="accessBtn" value="Access"><br/>
+            <input type="text" id="accessUrl" placeholder="Please input url"><input type="button" id="accessBtn" value="Access"  ><br/>
             <textarea rows="10" cols="60" id="accessParams" placeholder="Please input params"></textarea><br/>
             <textarea rows="20" cols="60" id="accessResponse"></textarea><br/>
         </div>
     </div>
+</div>
 </body>
 
 </html>
