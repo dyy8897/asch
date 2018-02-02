@@ -1,10 +1,10 @@
 {
-  "name": "common",
-  "link": "https://github.com/common-dapp.zip",
-  "category": 1,
-  "description": "dy's dapp of test",
-  "tags": "asch dapp demo",
-  "icon": "https://github.com/logo.png",
+  "name": "utilities",
+  "link": "http://github.com/utilities-dapp.zip",
+  "category": 8,
+  "description": "temp",
+  "tags": "asch dapp",
+  "icon": "http://github.com/logo.png",
   "delegates": [
     "049dce54fada64a5647435be76086a5948a2004b00a243b360e84acfee42d252",
     "bea68bf8e132bc3c9c9be655e094570b93b9ee80553d4c8f9a9847530c6f3726",
