@@ -1,0 +1,17 @@
+{
+  "name": "dy-dapp-test",
+  "link": "https://github.com/dy-dapp-test.zip",
+  "category": 1,
+  "description": "dy's dapp of test",
+  "tags": "asch dapp demo",
+  "icon": "https://github.com/logo.png",
+  "delegates": [
+    "049dce54fada64a5647435be76086a5948a2004b00a243b360e84acfee42d252",
+    "bea68bf8e132bc3c9c9be655e094570b93b9ee80553d4c8f9a9847530c6f3726",
+    "9ca91c19be85f446d71d9a9de72fa7136dc35fa0e3e305c2293d37c8bd04c415",
+    "fae71f1f7c5bb4e9f62e1426f3ec285dd92ad63a6a6b2ab03eb4d5f8db21c867",
+    "9122ea60a6e2309feecf9d477662a5d0c32f537db27fdb0661743c9f53224509"
+  ],
+  "unlockDelegates": 3,
+  "type": 0
+}
