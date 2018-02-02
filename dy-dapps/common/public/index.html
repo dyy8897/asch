@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <script src="jquery-1.9.1.min.js"></script>
     <script src="vue.min.js"></script>
+    <link href="cutestrap.css" rel="stylesheet" />
     <title>common - hello world</title>
 </head>
 
@@ -12,8 +13,10 @@
 $(document).ready(function() {
     // 将jquery的ajax加入到Vue对象中,vue对象里的this.$ajax就相当于是jquery的$.ajax
     Vue.prototype.$ajax = $.ajax;
-    var DAPP_ID = window.location.pathname.split('/')[2];
-    var BASE_URL = '/api/dapps/' + DAPP_ID;
+    const DAPP_ID = window.location.pathname.split('/')[2];
+    const BASE_URL = '/api/dapps/' + DAPP_ID;
+
+
     var COUNT_PER_PAGE = 20;
     var State = {
         isLogin: false,
