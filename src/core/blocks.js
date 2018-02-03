@@ -1219,7 +1219,7 @@ Blocks.prototype.generateBlock = function (keypair, timestamp, cb) {
   if (library.base.consensus.hasPendingBlock(timestamp)) {
     return setImmediate(cb);
   }
-  library.logger.info("generateBlock enter");
+  library.logger.debug("generateBlock enter");
   async.eachSeries(transactions, function (transaction, next) {
     modules.accounts.getAccount({ publicKey: transaction.senderPublicKey }, function (err, sender) {
       if (err || !sender) {
@@ -1254,8 +1254,17 @@ Blocks.prototype.generateBlock = function (keypair, timestamp, cb) {
       return setImmediate(cb, e);
     }
 
-    library.logger.info("Generate new block at height " + (private.lastBlock.height + 1));
+    library.logger.debug("Generate new block at height " + (private.lastBlock.height + 1));
     async.waterfall([
+      // 没有交易业务,就不生成区块.
+      function (next) {
+        if(block.transactions.length === 0){
+          return next("no transaction");
+        } else {
+            next();
+        }
+      },      
+      // =========================
       function (next) {
         self.verifyBlock(block, null, function (err) {
           if (err) {

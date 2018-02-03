@@ -490,7 +490,11 @@ private.loop = function (cb) {
       }
     }, function (err) {
       if (err) {
-        library.logger.error("Failed generate block within slot:", err);
+        if(err === "no transaction"){
+          library.logger.debug("Failed generate block within slot:", err);
+        }else{
+          library.logger.error("Failed generate block within slot:", err);
+        }
       }
       return setImmediate(cb);
     });
