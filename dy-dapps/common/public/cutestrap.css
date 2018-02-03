@@ -31,7 +31,7 @@ h1, h2, h3 {
   padding: .8rem 0 1.6rem; }
 
 h4, h5, h6 {
-  padding: 2.4rem 0; }
+  padding: 0.4rem 0; }
 
 h1 {
   font-size: 3.6rem; }
@@ -109,8 +109,8 @@ video {
   display: table; }
 
 hr {
-  height: 4.8rem;
-  margin-bottom: 2.4rem;
+  height: 2.8rem;
+  margin-bottom: -0.4rem;
   position: relative; }
   hr:before {
     background-color: #cdcdce;
@@ -194,15 +194,18 @@ abbr {
   cursor: default; }
 
 table {
+  border: 1px solid #7d7d7e;
   border-radius: 2px;
   border-collapse: separate;
   border-spacing: 0;
-  margin-bottom: 2.4rem;
+  margin-bottom: 0.4rem;
   width: 100%; }
   table th {
     font-weight: 500;
     text-align: left; }
   table th, table td {
+    border: 1px solid #7d7d7e;
+    border-radius: 2px;
     padding: 0 .6rem; }
 
 label {
@@ -213,7 +216,10 @@ label,
 select,
 button,
 textarea {
+  border: 1px solid #7e7d7e;
+  border-radius: 2px;
   display: block;
+  width: 100%; 
   resize: none;
   -webkit-appearance: none;
   -moz-appearance: none; }
@@ -357,15 +363,15 @@ button {
   color: #ffffff;
   cursor: pointer;
   display: inline-block;
-  height: 4.8rem;
-  line-height: 4.8rem;
+  height: 2.8rem;
+  line-height: 2.8rem;
   max-width: 100%;
   -webkit-transition-property: background-color;
   transition-property: background-color;
   -webkit-transition-duration: 200ms;
           transition-duration: 200ms;
   margin: 0 auto;
-  padding: 0 3rem;
+  padding: 0 1rem;
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;

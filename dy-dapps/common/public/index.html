@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <script src="jquery-1.9.1.min.js"></script>
@@ -22,31 +21,42 @@ $(document).ready(function() {
             COUNT_PER_PAGE: 20,
             isLogin: false,
             isLogout: true,
-            title: 'Hello Vue common!',
-            m2: '页面加载于 ' + new Date().toLocaleString(),
-            timer: null,
+            title: 'Dapp-common-Vue',
+            currentTime: new Date().toLocaleString(),
             UserInfo: {
                 secret: ''
             }
-            // timer: setInterval( ()=> {
-            //     console.log(this)
-            //     if (this.UserInfo.publicKey) {
-            //         getBalances(this.UserInfo.address);
-            //     }
-            // }, 10 * 1000),
-            
+           
         },
         methods: {
             reverseMessage: function () {
                 this.message = this.message.split('').reverse().join('')
             },
-            logout: function(e){
-                this.isLogin = false;
-                this.isLogout = true;
-                if (this.timer) {
-                    clearInterval(this.timer);
-                    this.timer = null;
+            timer: function(){
+                this.show = ()=>{
+                    this.currentTime = new Date().toLocaleString();
+                    if (this.UserInfo.publicKey) {
+                        this.getBalances(this.UserInfo.address);
+                    }
                 }
+                setInterval(this.show,1000);
+            },
+            getBalances: function(address) {
+                this.$ajax({
+                    type: 'GET',
+                    url: BASE_URL + '/balances/' + address,
+                    dataType: 'json',
+                    success: (res)=> {
+                        if (!res.success) {
+                            alert(res.error);
+                            return;
+                        }
+                        this.updateBalanceView(res.balances)
+                    }
+                });
+            },
+            logout: function(e){
+                location.reload();
             },
             login: function (event) {
                 const secret = $('#secretInput').val();
@@ -58,7 +68,6 @@ $(document).ready(function() {
                     },
                     dataType: 'json',
                     success: (res)=> {
-                        console.log(res)
                         if (!res.success) {
                             alert(res.error);
                             return;
@@ -70,9 +79,36 @@ $(document).ready(function() {
                         this.UserInfo.address = res.account.address
                         this.updateBalanceView(res.account.balances);
                         this.loadContracts()
-
+                        this.timer()
                     }
                 });
+            },
+            updateBalanceView: function(balances) {
+                var $table = $('#balanceTable');
+                $table.find('tr:not(:first)').remove();
+                for (var i in balances) {
+                    var balanceInfo = balances[i]
+                    var balance = Number(balanceInfo.balance) / 100000000
+                    var currency = balanceInfo.currency
+                    var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
+                    $table.append(tr);
+                }
+            },
+            loadContracts: function() {
+                this.$ajax({
+                    type: 'GET',
+                    url: BASE_URL + '/contracts',
+                    dataType: 'json',
+                    success: (res)=> {
+                        // console.log(res)
+                        var $contractOptions = $('#contractOptions')
+                        $contractOptions.empty()
+                        for (var i in res.contracts) {
+                            var c = res.contracts[i]
+                            $contractOptions.append('<option value="' + c.type + '">' + c.type + ': ' + c.name + '</option>')
+                        }
+                    }
+                })
             },
             invoke: function (event) {
                 var args = $('#contractArgs').val().split('\n')
@@ -84,7 +120,7 @@ $(document).ready(function() {
                     args: JSON.stringify(args)
                 }
                 console.log('invoke', data)
-                $.ajax({
+                this.$ajax({
                     type: 'PUT',
                     url: BASE_URL + '/transactions/unsigned',
                     data: data,
@@ -110,79 +146,37 @@ $(document).ready(function() {
                     alert('Invalid params')
                     return
                 }
-        
-                $.ajax({
+                this.$ajax({
                     type: 'GET',
                     url: BASE_URL + $('#accessUrl').val(),
                     data: jsonParams,
                     dataType: 'json',
+                    error: (res)=>{
+                        console.log('url=' + BASE_URL + $('#accessUrl').val())
+                        console.log(res.status)
+                    },
                     success: (res)=> {
                         console.log(res)
                         $('#accessResponse').val(JSON.stringify(res, null, 4));
                     }
                 })
-            },
-            updateBalanceView: function(balances) {
-                var $table = $('#balanceTable');
-                $table.find('tr:not(:first)').remove();
-                for (var i in balances) {
-                    var balanceInfo = balances[i]
-                    var balance = Number(balanceInfo.balance) / 100000000
-                    var currency = balanceInfo.currency
-                    var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
-                    $table.append(tr);
-                }
-            },
-            loadContracts: function() {
-                $.ajax({
-                    type: 'GET',
-                    url: BASE_URL + '/contracts',
-                    dataType: 'json',
-                    success: (res)=> {
-                        console.log(res)
-                        var $contractOptions = $('#contractOptions')
-                        $contractOptions.empty()
-                        for (var i in res.contracts) {
-                            var c = res.contracts[i]
-                            $contractOptions.append('<option value="' + c.type + '">' + c.type + ': ' + c.name + '</option>')
-                        }
-                    }
-                })
-            },
-            getBalances: function(address) {
-                $.ajax({
-                    type: 'GET',
-                    url: BASE_URL + '/balances/' + address,
-                    dataType: 'json',
-                    success: (res)=> {
-                        console.log(res);
-                        if (!res.success) {
-                            alert(res.error);
-                            return;
-                        }
-                        this.updateBalanceView(res.balances)
-                    }
-                });
             }
-
-        }
-    })
-
-});
+        }  // vue-methods
+    })  // new-Vue
+});  // jquery-ready
 </script>
 
 <body>
 <div id="common">
-    <h1 id="title" v-bind:title="m2">{{title}}</h1>
+    <h4 id="title">{{title}}---{{currentTime}}</h4>
     <div id="login">
         <input type="password" id="secretInput" placeholder="Please input master secret" v-if="isLogout">
-        <input type="button" value="登录系统" id="loginBtn" v-on:click="login" v-if="isLogout">
+        <input type="button" class="small" value="登录系统" id="loginBtn" v-on:click="login" v-if="isLogout">
         <input type="button" value="退出系统" id="logoutBtn" v-on:click="logout" v-if="isLogin">
     </div>
     <div id="mainPanel" v-if="isLogin">
-        <hr/>
-        <h2>Account balances</h2>
         <div>
+            <h5>帐户余额</h5>
             <table id="balanceTable" width="200px" border="1">
                 <tr>
                     <th>Currency</th>
@@ -190,23 +184,24 @@ $(document).ready(function() {
                 </tr>
             </table>
         </div>
-
-        <hr/>
-        <h2>Contract invoke</h2>
+        
         <div>
-            <select id="contractOptions"></select><input type="button" id="invokeBtn" value="Invoke" ><br/>
-            <textarea rows="6" cols="60" id="contractArgs" placeholder="Please input the arguments"></textarea><br/>
+            <hr />
+            <h5>智能合约contracts</h5>
+            <select id="contractOptions"></select>
+            <input type="text" rows="6" cols="60" id="contractArgs" placeholder="Please input the arguments"></input>
+            <input type="button" id="invokeBtn" value="Invoke" v-on:click="invoke">
         </div>
-
-        <hr/>
-        <h2>Interface access</h2>
+        
         <div>
-            <input type="text" id="accessUrl" placeholder="Please input url"><input type="button" id="accessBtn" value="Access"  ><br/>
-            <textarea rows="10" cols="60" id="accessParams" placeholder="Please input params"></textarea><br/>
-            <textarea rows="20" cols="60" id="accessResponse"></textarea><br/>
+            <hr />
+            <a href="https://github.com/AschPlatform/asch/blob/master/docs/asch_dapp_default_api.md" target="_blank">dapp默认接口测试(输入/api/dapps/dappID后面的,注意要加/)</a>
+            <input type="text" id="accessUrl" placeholder="Please input url">
+            <input type="text" id="accessParams" placeholder="Please input params">
+            <input type="button" id="accessBtn" value="Access" v-on:click="access"  >
+            <textarea rows="20" cols="60" id="accessResponse"></textarea>
         </div>
     </div>
 </div>
 </body>
-
 </html>
