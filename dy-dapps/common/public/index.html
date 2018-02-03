@@ -25,7 +25,16 @@ $(document).ready(function() {
             currentTime: new Date().toLocaleString(),
             UserInfo: {
                 secret: ''
-            }
+            },
+            getUrl: "",
+            putUrl: "",
+            postUrl: "",
+            getParams: "",
+            putParams: "",
+            postParams: "",
+            getResponse: "",
+            putResponse: "",
+            postResponse: ""
            
         },
         methods: {
@@ -135,8 +144,8 @@ $(document).ready(function() {
                     }
                 });
             },
-            access: function (event) {
-                var params = $('#accessParams').val()
+            getAccess: function (event) {
+                var params = this.getParams
                 var jsonParams = null
                 try {
                     if (params) {
@@ -148,16 +157,69 @@ $(document).ready(function() {
                 }
                 this.$ajax({
                     type: 'GET',
-                    url: BASE_URL + $('#accessUrl').val(),
+                    url: BASE_URL + this.getUrl,
                     data: jsonParams,
                     dataType: 'json',
                     error: (res)=>{
-                        console.log('url=' + BASE_URL + $('#accessUrl').val())
+                        console.log('url=' + BASE_URL + this.getUrl)
                         console.log(res.status)
                     },
                     success: (res)=> {
                         console.log(res)
-                        $('#accessResponse').val(JSON.stringify(res, null, 4));
+                        this.getResponse = JSON.stringify(res, null, 4);
+                    }
+                })
+            },
+            putAccess: function (event) {
+                var params = this.putParams
+                var jsonParams = null
+                try {
+                    if (params) {
+                        var jsonParams = JSON.parse(params)
+                    }
+                } catch (e) {
+                    alert('Invalid params')
+                    return
+                }
+                this.$ajax({
+                    type: 'PUT',
+                    url: BASE_URL + this.putUrl,
+                    data: jsonParams,
+                    dataType: 'json',
+                    error: (res)=>{
+                        console.log('url=' + BASE_URL + this.putUrl)
+                        console.log(res.status)
+                    },
+                    success: (res)=> {
+                        console.log(res)
+                        this.putResponse = JSON.stringify(res, null, 4);
+                    }
+                })
+            },
+            postAccess: function (event) {
+                var params = this.postParams
+                var jsonParams = null
+                try {
+                    if (params) {
+                        console.log(params)
+                        var jsonParams = JSON.parse(params)
+                    }
+                } catch (e) {
+                    alert('Invalid params')
+                    return
+                }
+                this.$ajax({
+                    type: 'POST',
+                    url: BASE_URL + this.postUrl,
+                    data: jsonParams,
+                    dataType: 'json',
+                    error: (res)=>{
+                        console.log('url=' + BASE_URL + this.postUrl)
+                        console.log(res.status)
+                    },
+                    success: (res)=> {
+                        console.log(res)
+                        this.postResponse = JSON.stringify(res, null, 4);
                     }
                 })
             }
@@ -196,10 +258,28 @@ $(document).ready(function() {
         <div>
             <hr />
             <a href="https://github.com/AschPlatform/asch/blob/master/docs/asch_dapp_default_api.md" target="_blank">dapp默认接口测试(输入/api/dapps/dappID后面的,注意要加/)</a>
-            <input type="text" id="accessUrl" placeholder="Please input url">
-            <input type="text" id="accessParams" placeholder="Please input params">
-            <input type="button" id="accessBtn" value="Access" v-on:click="access"  >
-            <textarea rows="20" cols="60" id="accessResponse"></textarea>
+            <table>
+                <tr>
+                    <td><input type="text" v-model="getUrl" placeholder="Please input url"></td>
+                    <td><input type="text" v-model="putUrl" placeholder="Please input url"></td>
+                    <td><input type="text" v-model="postUrl" placeholder="Please input url"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" v-model="getParams" placeholder="Please input params"></td>
+                    <td><input type="text" v-model="putParams" placeholder="Please input params"></td>
+                    <td><input type="text" v-model="postParams" placeholder="Please input params"></td>
+                </tr>
+                <tr>
+                    <td><input type="button" id="getBtn" value="get" v-on:click="getAccess"></td>
+                    <td><input type="button" id="putBtn" value="put" v-on:click="putAccess"></td>
+                    <td><input type="button" id="postBtn" value="post" v-on:click="postAccess"></td>
+                </tr>
+                <tr>
+                    <td><textarea rows="20" cols="60" v-model="getResponse"></textarea></td>
+                    <td><textarea rows="20" cols="60" v-model="putResponse"></textarea></td>
+                    <td><textarea rows="20" cols="60" v-model="postResponse"></textarea></td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
