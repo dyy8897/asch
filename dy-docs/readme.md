@@ -128,6 +128,16 @@
         "tourist fabric genius organ inherit soft awkward pool boy police awake genius"
     ]
 
+## 使用github合作开发
+信任合作模式：
+在 settings 》 collaborators 》 输入用户名 》 add collaborator
 
+非信任合作模式：
+
+贡献者 ：
+Fork 》 New pull request 》Create pull request 》 再次点击 Create pull request 》
+
+接受者：
+Pull request 》 open 》 Files changed 》 Conversation 》 Merge pull request 》 Confirm merge
 
 

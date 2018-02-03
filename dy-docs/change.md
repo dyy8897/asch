@@ -1,3 +1,6 @@
+#### 2018-02-03
+##### 在dy-dapps/common/项目下，引入cutestrap.css，用vue改写事件调用，数据绑定还没有做。
+
 #### 2018-02-02
 ##### 修改dapp的category的maximum限制,支持9-游戏的注册应用
 ##### 新建dy-dapps/目录, 使用asch-cli工具创建了9种分类的dapp的框架代码, 但其实都是一样的.
