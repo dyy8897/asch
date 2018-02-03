@@ -1,5 +1,8 @@
 #### 2018-02-03
-##### 在dy-dapps/common/项目下，引入cutestrap.css，用vue改写事件调用，数据绑定还没有做。
+##### 在dy-dapps/common/项目下，引入cutestrap.css，用vue改写事件调用和数据绑定。
+##### 在dy-dapps/common/项目下，前端实现get,put,post三种调用测试
+##### 在dy-dapps/common/项目下，拷贝了cctime的代码,用于学习
+##### 在core/blocks.js文件的生成block的校验规则中加入<没有交易业务,就不生成区块>
 
 #### 2018-02-02
 ##### 修改dapp的category的maximum限制,支持9-游戏的注册应用

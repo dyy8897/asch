@@ -2,9 +2,11 @@ const IntervalCache = require('./lib/interval-cache')
 
 module.exports = async function () {
   console.log('enter dapp init')
-
-  app.registerContract(1000, 'domain.register')
-  app.registerContract(1001, 'domain.set_ip')
+  // 在interface/下的文件中,用asch-js调用dapp的自定义合约
+  // AschJS.dapp.createInnerTransaction(options, secret)
+  // var type = 2000; // 这里的type指的是合约标号,就是下面的2000,2001,1000,1001等等
+  app.registerContract(2000, 'domain.register')
+  app.registerContract(2001, 'domain.set_ip')
 
   app.registerContract(1000, 'cctime.postArticle')
   app.registerContract(1001, 'cctime.postComment')
