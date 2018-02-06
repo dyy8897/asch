@@ -13,6 +13,7 @@ module.exports = async function () {
   app.registerContract(1002, 'cctime.voteArticle')
   app.registerContract(1003, 'cctime.likeComment')
   app.registerContract(1004, 'cctime.report')
+  app.registerContract(1005, 'drgserver.comp')
 
   app.setDefaultFee('10000000', 'CCTime.XCT')
 
