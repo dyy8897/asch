@@ -35,7 +35,7 @@ $(document).ready(function() {
             getResponse: "",
             putResponse: "",
             postResponse: ""
-           
+
         },
         methods: {
             reverseMessage: function () {
@@ -106,10 +106,9 @@ $(document).ready(function() {
             loadContracts: function() {
                 this.$ajax({
                     type: 'GET',
-                    url: BASE_URL + '/contracts',
+                    url: BASE_URL + '/' + '/contracts',
                     dataType: 'json',
                     success: (res)=> {
-                        // console.log(res)
                         var $contractOptions = $('#contractOptions')
                         $contractOptions.empty()
                         for (var i in res.contracts) {
@@ -128,14 +127,12 @@ $(document).ready(function() {
                     type: Number($('#contractOptions').val()),
                     args: JSON.stringify(args)
                 }
-                console.log('invoke', data)
                 this.$ajax({
                     type: 'PUT',
-                    url: BASE_URL + '/transactions/unsigned',
+                    url: BASE_URL + '/' + '/transactions/unsigned',
                     data: data,
                     dataType: 'json',
                     success: (res)=> {
-                        console.log(res);
                         if (!res.success) {
                             alert('Error: ' + res.error);
                             return;
@@ -157,15 +154,12 @@ $(document).ready(function() {
                 }
                 this.$ajax({
                     type: 'GET',
-                    url: BASE_URL + this.getUrl,
+                    url: BASE_URL + '/' + this.getUrl,
                     data: jsonParams,
                     dataType: 'json',
                     error: (res)=>{
-                        console.log('url=' + BASE_URL + this.getUrl)
-                        console.log(res.status)
                     },
                     success: (res)=> {
-                        console.log(res)
                         this.getResponse = JSON.stringify(res, null, 4);
                     }
                 })
@@ -187,11 +181,8 @@ $(document).ready(function() {
                     data: jsonParams,
                     dataType: 'json',
                     error: (res)=>{
-                        console.log('url=' + BASE_URL + this.putUrl)
-                        console.log(res.status)
                     },
                     success: (res)=> {
-                        console.log(res)
                         this.putResponse = JSON.stringify(res, null, 4);
                     }
                 })
@@ -201,7 +192,6 @@ $(document).ready(function() {
                 var jsonParams = null
                 try {
                     if (params) {
-                        console.log(params)
                         var jsonParams = JSON.parse(params)
                     }
                 } catch (e) {
@@ -210,15 +200,12 @@ $(document).ready(function() {
                 }
                 this.$ajax({
                     type: 'POST',
-                    url: BASE_URL + this.postUrl,
+                    url: BASE_URL + '/' + this.postUrl,
                     data: jsonParams,
                     dataType: 'json',
                     error: (res)=>{
-                        console.log('url=' + BASE_URL + this.postUrl)
-                        console.log(res.status)
                     },
                     success: (res)=> {
-                        console.log(res)
                         this.postResponse = JSON.stringify(res, null, 4);
                     }
                 })
@@ -246,7 +233,7 @@ $(document).ready(function() {
                 </tr>
             </table>
         </div>
-        
+
         <div>
             <hr />
             <h5>智能合约contracts</h5>
@@ -254,10 +241,10 @@ $(document).ready(function() {
             <input type="text" rows="6" cols="60" id="contractArgs" placeholder="Please input the arguments"></input>
             <input type="button" id="invokeBtn" value="Invoke" v-on:click="invoke">
         </div>
-        
+
         <div>
             <hr />
-            <a href="https://github.com/AschPlatform/asch/blob/master/docs/asch_dapp_default_api.md" target="_blank">dapp默认接口测试(输入/api/dapps/dappID后面的,注意要加/)</a>
+            <a href="https://github.com/AschPlatform/asch/blob/master/docs/asch_dapp_default_api.md" target="_blank">dapp默认接口测试(输入/api/dapps/dappID后面的,注意不需要要加/)</a>
             <table>
                 <tr>
                     <td><input type="text" v-model="getUrl" placeholder="Please input url"></td>
