@@ -35,7 +35,10 @@ $(document).ready(function() {
             postParams: "",
             getResponse: "",
             putResponse: "",
-            postResponse: ""
+            postResponse: "",
+            getPublickay: "",
+            getFee: "",
+            getTrader: ""
 
         },
         methods: {
@@ -217,6 +220,25 @@ $(document).ready(function() {
                         this.postResponse = JSON.stringify(res, null, 4);
                     }
                 })
+            },
+            Trader: function (event) {
+              getpunlickey = this.getPublickay
+              getfee = this.getFee
+              gettrader = this.getTrader
+              this.$ajax({
+                  type: 'POST',
+                  url: BASE_URL + '/trader',
+                  data: {
+                    getpunlickey: getpunlickey,
+                    getfee: getfee,
+                    gettrader: gettrader
+                  },
+                  dataType: 'json',
+                  error: (res)=>{
+                  },
+                  success: (res)=> {
+                  }
+              })
             }
         }  // vue-methods
     })  // new-Vue
@@ -298,6 +320,30 @@ $(document).ready(function() {
                     <td><textarea rows="20" cols="60" v-model="postResponse"></textarea></td>
                 </tr>
             </table>
+        </div>
+        <div>
+          <hr />
+          <h4>转账</h4>
+          <div class="col-6">
+            <table class="table">
+              <tr>
+                <td><h5 class="float-right">账号(公钥):</h5></td>
+                <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getPublickay" placeholder="Please input publickay" /></td>
+              </tr>
+              <tr>
+                <td><h5 class="float-right">金额:</h5></td>
+                <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getFee" placeholder="Please input fee" /></td>
+              </tr>
+              <tr>
+                <td><h5 class="float-right">交易人:</h5></td>
+                <td><input class="form-control" type="text" v-model="getTrader" placeholder="Please input Trader" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button type="button" class="btn btn-primary float-right" id="getBtn" v-on:click="Trader">Trader</button></td>
+              </tr>
+            </table>
+          </div>
         </div>
     </div>
 </div>
