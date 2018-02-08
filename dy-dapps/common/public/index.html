@@ -38,7 +38,10 @@ $(document).ready(function() {
             postResponse: "",
             getPublickay: "",
             getFee: "",
-            getTrader: ""
+            getTrader: "",
+            getAccount: "",
+            getSecondPass: "dzc944262316",
+            getRecharge: ""
 
         },
         methods: {
@@ -221,6 +224,7 @@ $(document).ready(function() {
                     }
                 })
             },
+            //  交易
             Trader: function (event) {
               getpunlickey = this.getPublickay
               getfee = this.getFee
@@ -238,6 +242,27 @@ $(document).ready(function() {
                   },
                   success: (res)=> {
                   }
+              })
+            },
+            // 充值
+            Recharge: function (event) {
+              getAccount = this.getAccount
+              getSecondPass = this.getSecondPass
+              getRecharge = this.getRecharge
+              console.log(getSecondPass);
+              this.$ajax({
+                type: 'POST',
+                url: BASE_URL +  '/recharge',
+                data: {
+                  BASE_URL: BASE_URL,
+                  getAccount: getAccount,
+                  getRecharge: getRecharge
+                },
+                dataType: 'json',
+                error: (res)=>{
+                },
+                success: (res)=> {
+                }
               })
             }
         }  // vue-methods
@@ -323,26 +348,51 @@ $(document).ready(function() {
         </div>
         <div>
           <hr />
-          <h4>转账</h4>
-          <div class="col-6">
-            <table class="table">
-              <tr>
-                <td><h5 class="float-right">账号(公钥):</h5></td>
-                <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getPublickay" placeholder="Please input publickay" /></td>
-              </tr>
-              <tr>
-                <td><h5 class="float-right">金额:</h5></td>
-                <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getFee" placeholder="Please input fee" /></td>
-              </tr>
-              <tr>
-                <td><h5 class="float-right">交易人:</h5></td>
-                <td><input class="form-control" type="text" v-model="getTrader" placeholder="Please input Trader" /></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td><button type="button" class="btn btn-primary float-right" id="getBtn" v-on:click="Trader">Trader</button></td>
-              </tr>
-            </table>
+          <div class="row">
+            <div class="col-6">
+              <h4>转账</h4>
+              <table class="table">
+                <tr>
+                  <td><h5 class="float-right">账号(公钥):</h5></td>
+                  <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getPublickay" placeholder="Please input publickay" /></td>
+                </tr>
+                <tr>
+                  <td><h5 class="float-right">金额:</h5></td>
+                  <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getFee" placeholder="Please input fee" /></td>
+                </tr>
+                <tr>
+                  <td><h5 class="float-right">交易人:</h5></td>
+                  <td><input class="form-control" type="text" v-model="getTrader" placeholder="Please input Trader" /></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><button type="button" class="btn btn-primary float-right" id="getBtn" v-on:click="Trader">Trader</button></td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-6">
+              <h4>充值</h4>
+              <table class="table">
+                <tr>
+                  <td><h5 class="float-right">账号：</h5></td>
+                  <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getAccount" placeholder="Please input Account number" /></td>
+                </tr>
+                <tr>
+                  <td><h5 class="float-right">二级密码：</h5></td>
+                  <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getSecondPass" placeholder="Please input Second Password" /></td>
+                </tr>
+                <tr>
+                  <td><h5 class="float-right">充值金额：</h5></td>
+                  <td><input class="form-control" type="text" v-model="getRecharge" placeholder="Please input Recharge amount" /></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    <button type="button" class="btn btn-primary float-right" id="getBtn" v-on:click="Recharge">Recharge</button>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
     </div>
