@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <script src="jquery-1.9.1.min.js"></script>
     <script src="vue.min.js"></script>
-    <link href="cutestrap.css" rel="stylesheet" />
+    <!-- <link href="cutestrap.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>common - hello world</title>
 </head>
 
@@ -34,7 +35,10 @@ $(document).ready(function() {
             postParams: "",
             getResponse: "",
             putResponse: "",
-            postResponse: ""
+            postResponse: "",
+            getPublickay: "",
+            getFee: "",
+            getTrader: ""
 
         },
         methods: {
@@ -94,19 +98,19 @@ $(document).ready(function() {
             },
             updateBalanceView: function(balances) {
                 var $table = $('#balanceTable');
-                $table.find('tr:not(:first)').remove();
+                $table.children(tr).remove();
                 for (var i in balances) {
                     var balanceInfo = balances[i]
                     var balance = Number(balanceInfo.balance) / 100000000
                     var currency = balanceInfo.currency
-                    var tr = '<tr><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
+                    var tr = '<tr class="table-primary"><td>' + currency + '</td>' + '<td>' + balance + '</td></tr>';
                     $table.append(tr);
                 }
             },
             loadContracts: function() {
                 this.$ajax({
                     type: 'GET',
-                    url: BASE_URL + '/' + '/contracts',
+                    url: BASE_URL + '/contracts',
                     dataType: 'json',
                     success: (res)=> {
                         var $contractOptions = $('#contractOptions')
@@ -127,9 +131,10 @@ $(document).ready(function() {
                     type: Number($('#contractOptions').val()),
                     args: JSON.stringify(args)
                 }
+                console.log('invoke', data)
                 this.$ajax({
                     type: 'PUT',
-                    url: BASE_URL + '/' + '/transactions/unsigned',
+                    url: BASE_URL + '/transactions/unsigned',
                     data: data,
                     dataType: 'json',
                     success: (res)=> {
@@ -177,12 +182,15 @@ $(document).ready(function() {
                 }
                 this.$ajax({
                     type: 'PUT',
-                    url: BASE_URL + this.putUrl,
+                    url: BASE_URL + '/' + this.putUrl,
                     data: jsonParams,
                     dataType: 'json',
                     error: (res)=>{
+                        console.log('url=' + BASE_URL + this.putUrl)
+                        console.log(res.status)
                     },
                     success: (res)=> {
+                        console.log(res)
                         this.putResponse = JSON.stringify(res, null, 4);
                     }
                 })
@@ -204,11 +212,33 @@ $(document).ready(function() {
                     data: jsonParams,
                     dataType: 'json',
                     error: (res)=>{
+                        console.log('url=' + BASE_URL + this.postUrl)
+                        console.log(res.status)
                     },
                     success: (res)=> {
+                        console.log(res)
                         this.postResponse = JSON.stringify(res, null, 4);
                     }
                 })
+            },
+            Trader: function (event) {
+              getpunlickey = this.getPublickay
+              getfee = this.getFee
+              gettrader = this.getTrader
+              this.$ajax({
+                  type: 'POST',
+                  url: BASE_URL +  '/trader',
+                  data: {
+                    getpunlickey: getpunlickey,
+                    getfee: getfee,
+                    gettrader: gettrader
+                  },
+                  dataType: 'json',
+                  error: (res)=>{
+                  },
+                  success: (res)=> {
+                  }
+              })
             }
         }  // vue-methods
     })  // new-Vue
@@ -216,50 +246,73 @@ $(document).ready(function() {
 </script>
 
 <body>
-<div id="common">
-    <h4 id="title">{{title}}---{{currentTime}}</h4>
-    <div id="login">
-        <input type="password" id="secretInput" placeholder="Please input master secret" v-if="isLogout">
-        <input type="button" class="small" value="登录系统" id="loginBtn" v-on:click="login" v-if="isLogout">
-        <input type="button" value="退出系统" id="logoutBtn" v-on:click="logout" v-if="isLogin">
+<div id="common" class="container-fluid">
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <h4 id="title">{{title}}---{{currentTime}}</h4>
+      </a>
+      <button type="submit" class="btn btn-primary" v-on:click="logout" v-if="isLogin" id="logoutBtn">退出系统</button>
+    </nav>
+    <div class="row login">
+      <div class="form-group col-md-6" v-if="isLogout">
+        <input type="password" class="form-control" placeholder="Please input master secret" id="secretInput">
+      </div>
+      <button v-if="isLogout" class="btn btn-primary login_button" v-on:click="login" id="loginBtn">登录系统</button>
     </div>
-    <div id="mainPanel" v-if="isLogin">
+    <div id="mainPanel" v-if="isLogin" style="margin-top: 2.5em">
         <div>
             <h5>帐户余额</h5>
-            <table id="balanceTable" width="200px" border="1">
+            <table class="table table-bordered">
+              <thead>
                 <tr>
                     <th>Currency</th>
                     <th>Balance</th>
                 </tr>
+              </thead>
+              <tbody id="balanceTable"></tbody>
             </table>
         </div>
 
-        <div>
+        <div class="invoke_modal">
             <hr />
             <h5>智能合约contracts</h5>
-            <select id="contractOptions"></select>
-            <input type="text" rows="6" cols="60" id="contractArgs" placeholder="Please input the arguments"></input>
-            <input type="button" id="invokeBtn" value="Invoke" v-on:click="invoke">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">contracts</label>
+              </div>
+              <select class="custom-select" id="contractOptions"></select>
+            </div>
+            <div class="row invoke">
+              <div class="form-group col-md-6">
+                <input type="text" class="form-control" placeholder="Please input  the arguments" id="contractArgs">
+              </div>
+              <button class="btn btn-primary col-md-1" v-on:click="invoke" id="invokeBtn">Invoke</button>
+            </div>
         </div>
 
         <div>
             <hr />
-            <a href="https://github.com/AschPlatform/asch/blob/master/docs/asch_dapp_default_api.md" target="_blank">dapp默认接口测试(输入/api/dapps/dappID后面的,注意不需要要加/)</a>
-            <table>
+            <a href="https://github.com/AschPlatform/asch/blob/master/docs/asch_dapp_default_api.md" target="_blank">dapp默认接口测试(输入/api/dapps/dappID后面的,注意要加/)</a>
+            <table class="table table-bordered">
                 <tr>
-                    <td><input type="text" v-model="getUrl" placeholder="Please input url"></td>
-                    <td><input type="text" v-model="putUrl" placeholder="Please input url"></td>
-                    <td><input type="text" v-model="postUrl" placeholder="Please input url"></td>
+                    <td><input class="form-control" type="text" v-model="getUrl" placeholder="Please input url"></td>
+                    <td><input class="form-control" type="text" v-model="putUrl" placeholder="Please input url"></td>
+                    <td><input class="form-control" type="text" v-model="postUrl" placeholder="Please input url"></td>
                 </tr>
                 <tr>
-                    <td><input type="text" v-model="getParams" placeholder="Please input params"></td>
-                    <td><input type="text" v-model="putParams" placeholder="Please input params"></td>
-                    <td><input type="text" v-model="postParams" placeholder="Please input params"></td>
+                    <td><input class="form-control" type="text" v-model="getParams" placeholder="Please input params"></td>
+                    <td><input class="form-control" type="text" v-model="putParams" placeholder="Please input params"></td>
+                    <td><input class="form-control" type="text" v-model="postParams" placeholder="Please input params"></td>
                 </tr>
                 <tr>
-                    <td><input type="button" id="getBtn" value="get" v-on:click="getAccess"></td>
-                    <td><input type="button" id="putBtn" value="put" v-on:click="putAccess"></td>
-                    <td><input type="button" id="postBtn" value="post" v-on:click="postAccess"></td>
+                    <td>
+                      <button type="button" class="btn btn-primary" id="getBtn" v-on:click="getAccess">get</button>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-primary" id="putBtn" v-on:click="putAccess">put</button>
+                    </td>
+                    <td><button type="button" class="btn btn-primary" id="postBtn" v-on:click="postAccess">post</button>
+                  </td>
                 </tr>
                 <tr>
                     <td><textarea rows="20" cols="60" v-model="getResponse"></textarea></td>
@@ -268,7 +321,48 @@ $(document).ready(function() {
                 </tr>
             </table>
         </div>
+        <div>
+          <hr />
+          <h4>转账</h4>
+          <div class="col-6">
+            <table class="table">
+              <tr>
+                <td><h5 class="float-right">账号(公钥):</h5></td>
+                <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getPublickay" placeholder="Please input publickay" /></td>
+              </tr>
+              <tr>
+                <td><h5 class="float-right">金额:</h5></td>
+                <td><input style="margin-bottom:1em" class="form-control" type="text" v-model="getFee" placeholder="Please input fee" /></td>
+              </tr>
+              <tr>
+                <td><h5 class="float-right">交易人:</h5></td>
+                <td><input class="form-control" type="text" v-model="getTrader" placeholder="Please input Trader" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button type="button" class="btn btn-primary float-right" id="getBtn" v-on:click="Trader">Trader</button></td>
+              </tr>
+            </table>
+          </div>
+        </div>
     </div>
 </div>
 </body>
 </html>
+<style>
+.login{
+  margin-top: 1em;
+}
+.login_button{
+  height: 2.5em;
+}
+.invoke {
+  margin-top: 1em;
+}
+.invoke > button {
+  height: 2.5em;
+}
+.invoke_modal {
+  margin: 2em 0 2em 0;
+}
+</style>
