@@ -15,7 +15,7 @@ module.exports = async function () {
   app.registerContract(1004, 'cctime.report')
   app.registerContract(1005, 'drgserver.comp')
 
-  app.setDefaultFee('10000000', 'CCTime.XCT')
+  app.setDefaultFee('10000000', 'XCT')
 
   app.custom.cache = new IntervalCache(10 * 1000)
 
